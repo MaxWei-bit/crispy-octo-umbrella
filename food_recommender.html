@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>今天吃什么</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            text-align: center;
+        }
+        .food-icon {
+            width: 100px;
+            height: 100px;
+            background-color: #ff6b6b;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px auto;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .food-icon:hover {
+            transform: scale(1.1);
+        }
+        .food-icon i {
+            font-size: 50px;
+            color: white;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 24px;
+            min-height: 30px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>今天吃什么?</h1>
+        <div class="food-icon" onclick="recommendFood()">
+            <i class="fas fa-utensils"></i>
+        </div>
+        <div class="result" id="foodResult"></div>
+    </div>
+    <script>
+    const foods = [
+        {
+            name: "7层-16层东北老厨",
+            items: [
+                "🐂主荤：卤鸡腿，豉汁蒸翅骨",
+                "🍡半荤：鲜蘑肉片粉，干锅娃娃菜，海鲜蒸鸡蛋羹",
+                "🥒素菜：小炒藕丁，酸辣白菜，蒜蓉小油菜",
+                "🥟风味小吃：炝拌绿豆芽",
+                "🍚主食：白米饭，五谷饭",
+                "🍠杂粮：蒸玉米",
+                "🥛饮品：芬达无糖零卡",
+                "🍜面食：红豆卷，双色花卷",
+                "🍲咸汤：西红柿鸡蛋汤",
+                "🥘粥：南瓜小米粥"
+            ]
+        },
+        {
+            name: "7层-16层-川人蜀味",
+            items: [
+                "🐂主荤：水煮鱼，鱼香肘子块",
+                "🍡半荤：干锅千叶豆腐，青笋炒鸡片，肉沫虎皮尖椒",
+                "🥒素菜：小炒藕丁，酸辣白菜，蒜蓉小油菜",
+                "🥟风味小吃：炝拌绿豆芽",
+                "🍚主食：白米饭，五谷饭",
+                "🍠杂粮：蒸玉米",
+                "🥛饮品：芬达无糖零卡",
+                "🍜面食：红豆卷，双色花卷",
+                "🍲咸汤：西红柿鸡蛋汤",
+                "🥘粥：南瓜小米粥"
+            ]
+        },
+        {
+            name: "7层-16层-京鲁家常",
+            items: [
+                "🐂主荤：蚝油牛肉，香酥鸡块",
+                "🍡半荤：西葫芦炒肉，鱼香鸡片，五花肉炖粉条",
+                "🥒素菜：小炒藕丁，酸辣白菜，蒜蓉小油菜",
+                "🥟风味小吃：炝拌绿豆芽",
+                "🍚主食：白米饭，五谷饭",
+                "🍠杂粮：蒸玉米",
+                "🥛饮品：芬达无糖零卡",
+                "🍜面食：红豆卷，双色花卷",
+                "🍲咸汤：西红柿鸡蛋汤",
+                "🥘粥：南瓜小米粥"
+            ]
+        },
+        {
+            name: "7层-面面俱到",
+            items: [
+                "🍱套餐1：红烧牛肉面",
+                "🍱套餐2：肉沫热干面",
+                "🍱套餐3：素臊子面"
+            ]
+        },
+        {
+            name: "7层-南北食集",
+            items: [
+                "🍱套餐1：虾仁一口香水饺",
+                "🍱套餐2：猪肉荠菜水饺",
+                "🍱套餐3：黄瓜鸡蛋水饺"
+            ]
+        },
+        {
+            name: "7层-锅仔一族",
+            items: [
+                "🍱套餐1：牛杂煲",
+                "🍱套餐2：农家泡椒鸡"
+            ]
+        },
+        {
+            name: "7层-烧腊烤鸭",
+            items: [
+                "🍱套餐1：烧鸭饭",
+                "🍱套餐2：碎椒猪肉饭",
+                "🍱套餐3：奥尔良烤鸡扒饭"
+            ]
+        },
+        {
+            name: "7层-热辣工坊",
+            items: [
+                "🍱套餐1：大虾冒菜",
+                "🍱套餐2：小酥肉冒菜"
+            ]
+        },
+        {
+            name: "16层-面面俱到",
+            items: [
+                "🍱套餐1：牛肉拉面",
+                "🍱套餐2：双椒鸡丁拌面",
+                "🍱套餐3：素臊子面"
+            ]
+        },
+        {
+            name: "16层-烧腊烤鸭",
+            items: [
+                "🍱套餐1：烧鸭饭",
+                "🍱套餐2：碎椒猪肉饭",
+                "🍱套餐3：奥尔良烤鸡扒饭"
+            ]
+        },
+        {
+            name: "16层-风味铺子",
+            items: [
+                "🍱套餐1：猪肉茴香蒸饺",
+                "🍱套餐2：小白菜鸡蛋蒸饺"
+            ]
+        },
+        {
+            name: "16层-胡椒味道",
+            items: [
+                "🍱套餐1：香辣烤鱼",
+                "🍱套餐2：清蒸鲈鱼"
+            ]
+        },
+        {
+            name: "16层-蜀香人家",
+            items: [
+                "🍱套餐1：排骨麻辣香锅",
+                "🍱套餐2：菠萝鸡肉炒饭"
+            ]
+        },
+        {
+            name: "16层-热辣工坊（自选)",
+            items: [
+                "🍱套餐1：肥牛麻辣烫",
+                "🍱套餐2：鸡柳麻辣烫"
+            ]
+        },
+        {
+            name: "23层西塔-十里面香",
+            items: [
+                "🍱套餐1：酸菜肥牛米粉",
+                "🍱套餐2：浓汤鸡米粉"
+            ]
+        },
+        {
+            name: "23层西塔-异域风情",
+            items: [
+                "🍱套餐1：虾仁芝士焗土豆意面",
+                "🍱套餐2：鸡肉芝士焗土豆意面"
+            ]
+        },
+        {
+            name: "7层-16层-清真盒饭",
+            items: [
+                "🕌清真盒饭：青萝卜牛肉套餐，干锅鱼片"
+            ]
+        },
+        {
+            name: "7层-16层-轻食盒饭",
+            items: [
+                "🍱轻食餐餐品：虾仁轻食，黑椒牛肉粒轻食"
+            ]
+        },
+        {
+            name: "23层-轻食自助餐线",
+            items: [
+                "🐂主荤：虾仁，蒜香蜂蜜鸡肉",
+                "🥒素菜：白煮蛋，田园蔬菜，青笋条，烤杏鲍菇条，烤白菜花，圣女果，红腰豆，紫甘蓝丝，焯水秋葵",
+                "🍚主食：劲脆鸡排中卷寿司，墨鱼面",
+                "🍠杂粮：贝贝瓜，土豆泥"
+            ]
+        },
+        {
+            name: "7层-16层-常规盒饭",
+            items: [
+                "🍱（普通盒饭）：黄豆烧猪蹄套餐"
+            ]
+        },
+        {
+            name: "下午茶",
+            items: [
+                "15:00-16:00",
+                "🍰烘焙：蝴蝶酥"
+            ]
+        }
+    ];
+
+    function recommendFood() {
+        const randomCategory = foods[Math.floor(Math.random() * foods.length)];
+        const randomItem = randomCategory.items[Math.floor(Math.random() * randomCategory.items.length)];
+        
+        document.getElementById('foodResult').innerHTML = 
+            `<h2>${randomCategory.name}</h2>
+            <p>${randomItem}</p>`;
+    }
+</script>
+</body>
+</html>
